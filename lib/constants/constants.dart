@@ -14,4 +14,4 @@ const BorderRadius receiverBorder = BorderRadius.only(
   bottomRight: Radius.circular(10),
 );
 
-const String apiKey = "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";
+const String apiKey = "";
