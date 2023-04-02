@@ -1,16 +1,12 @@
-# chatgptv1
+# Open AI ChatGPT and Dall-E
 
-A new Flutter project.
+An app made in flutter, to interact with ChatGPT model and Dall-E image generation model.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+## Screenshots
 
-A few resources to get you started if this is your first Flutter project:
+![01](https://user-images.githubusercontent.com/16263958/229297637-8f6654cf-cb15-4ef4-a332-5933b0efc6e1.png)
+![02](https://user-images.githubusercontent.com/16263958/229297643-860382f9-1833-44d4-b20a-f5cc73696d5d.png)
+![03](https://user-images.githubusercontent.com/16263958/229297644-6b8fe8b4-cb65-47f5-8eaa-75f26dcd1cc2.png)
+![04](https://user-images.githubusercontent.com/16263958/229297646-50085804-fbc4-47d4-bb41-d25f63708dae.png)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
