@@ -14,7 +14,6 @@ class MyApp extends StatelessWidget {
       title: 'ChatGPT',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: const Color(0xff00A67E),
         colorScheme: const ColorScheme(
             brightness: Brightness.light,
             primary: Color(0xff00A67E),
@@ -22,7 +21,7 @@ class MyApp extends StatelessWidget {
             secondary: Colors.white,
             onSecondary: Colors.black,
             error: Colors.red,
-            onError: Color(0xffffffff),
+            onError: Colors.red,
             background: Color(0xffffffff),
             onBackground: Color(0xffffffff),
             surface: Color(0xff00A67E),

@@ -31,6 +31,13 @@ class ApiClass{
     scrollToBottom(controller);
   }
 
+  //adding messages to list
+  updateMessages(String role,String content,bool isImage,ScrollController controller){
+    messages.last = Message(role: role, content: content,isImage: isImage);
+    streamController!.add(messages);
+    scrollToBottom(controller);
+  }
+
   //this is the main API which decides the prompt is a picture or not
   Future<String> mainApi(String prompt,ScrollController controller)async{
 
@@ -41,24 +48,23 @@ class ApiClass{
     //and this code is inspired from Rivaan Ranawat, I was stuck with this for so long
     try{
       final response = await http.post(Uri.parse("https://api.openai.com/v1/chat/completions"),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $apiKey"
-        },
-        body: jsonEncode({
-          "model": "gpt-3.5-turbo",
-          "messages": [{
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer $apiKey"
+          },
+          body: jsonEncode({
+            "model": "gpt-3.5-turbo",
+            "messages": [{
               "role": "assistant",
               "content": "is this asking you to generate or create or make an AI image, drawing, picture, photograph, painting or art? : $prompt. if yes then reply simply yes else no in lowercase"
-          }]
-        })
+            }]
+          })
       );
 
       if(response.statusCode == 200){
         //prompt response
         final String content = jsonDecode(response.body)["choices"][0]["message"]["content"];
         content.trim();
-        print(content);
         //if the response is yes, then it will call the Dall-E image generation api, if no then simple the ChatGPTApi
         if(content == "yes"){
           final mainResponse = await imageGenerationApi(prompt,controller);
@@ -77,6 +83,9 @@ class ApiClass{
 
   //chat gpt api for basic text prompt
   Future<String> chatGptApi(String prompt,ScrollController controller)async{
+
+    addMessages("assistant", "....", false, controller);
+
     try{
       final response = await http.post(Uri.parse("https://api.openai.com/v1/chat/completions"),
           headers: {
@@ -94,7 +103,7 @@ class ApiClass{
       if(response.statusCode == 200){
         final String content = jsonDecode(response.body)["choices"][0]["message"]["content"];
         content.trim();
-        addMessages("assistant", content, false, controller);
+        updateMessages("assistant", content, false, controller);
       }
       return "Something went wrong";
     }
@@ -105,6 +114,9 @@ class ApiClass{
 
   //Dall-E API for image generation
   Future<String> imageGenerationApi(String prompt,ScrollController controller)async{
+
+    addMessages("assistant", "....", true, controller);
+
     try{
       final response = await http.post(Uri.parse("https://api.openai.com/v1/images/generations"),
           headers: {
@@ -120,7 +132,7 @@ class ApiClass{
       if(response.statusCode == 200){
         final String content = jsonDecode(response.body)["data"][0]["url"];
         content.trim();
-        addMessages("assistant", content, true, controller);
+        updateMessages("assistant", content, true, controller);
       }
       return "Something went wrong";
     }
