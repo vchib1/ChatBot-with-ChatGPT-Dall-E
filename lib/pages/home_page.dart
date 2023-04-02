@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chatgptv1/constants/constants.dart';
 import 'package:chatgptv1/services/api_service.dart';
@@ -111,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                       if(data.role == "user"){
                         //user
                         return Align(
-                          alignment: Alignment.topRight,
+                          alignment: Alignment.topRight, //aligns user message tile to right
                           child: SlideInRight(
                             duration: const Duration(milliseconds: 300),
                             child: Container(
@@ -121,27 +122,29 @@ class _HomePageState extends State<HomePage> {
                                 color: Theme.of(context).colorScheme.primary,
                                 borderRadius: senderBorder,
                               ),
-                              child: Text(data.content,style: const TextStyle(fontSize: 16),),
+                              child: Text(data.content,style: const TextStyle(fontSize: 16),), //user prompt message
                             ),
                           ),
                         );
                       }else{
                         //assistant
                         return Align(
-                          alignment: Alignment.topLeft,
+                          alignment: Alignment.topLeft, //aligns assistant message tile to left
                           child: SlideInLeft(
                             duration: const Duration(milliseconds: 300),
                             child: GestureDetector(
-                              onLongPress:  () => copyText(data.content),
+                              onLongPress:  () => copyText(data.content), //copy message to clip board on long press
                               child: Container(
-                                height: data.isImage ? 250 : null,
-                                width: data.isImage ? 250 : null,
+                                height: data.isImage ? 250 : null, //if data.isImage then it the height and width is fixed to 250
+                                width: data.isImage ? 250 : null, //if not then the both are null, so it resizes according to its child
                                 padding: data.isImage ? const EdgeInsets.all(0) : const EdgeInsets.all(15),
                                 margin: const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
                                   color: Theme.of(context).colorScheme.primary,
                                   borderRadius: receiverBorder,
                                 ),
+
+                                //if data.isImage is true then it shows cachedNetworkImage to show image. if false then shows text message
                                 child: data.isImage ?
                                 GestureDetector(
                                     onTap: ()=> viewImage(context, data.content),
@@ -156,7 +159,19 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       errorWidget: (context, url, error) => const Icon(Icons.error),
                                     )
-                                ) : Text(data.content,style: const TextStyle(fontSize: 16),),
+                                )
+                                    :
+                                data.content == "...." ? //if the data.content is "...." then it shows animated text until the actual message is updated
+                                //animated wavy animation
+                                AnimatedTextKit(
+                                  animatedTexts: [
+                                    WavyAnimatedText(data.content,textStyle: const TextStyle(fontSize: 16,fontWeight: FontWeight.bold),speed: const Duration(milliseconds: 300)),
+                                  ],
+                                  isRepeatingAnimation: true,
+                                )
+                                    :
+                                //main message
+                                Text(data.content,style: const TextStyle(fontSize: 16),),
                               ),
                             ),
                           ),

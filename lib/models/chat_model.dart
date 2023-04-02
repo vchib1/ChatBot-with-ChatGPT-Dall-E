@@ -1,6 +1,6 @@
 class Message{
-  final String role;
-  final bool isImage;
+  String role;
+  bool isImage;
   String content;
 
   Message({
