@@ -44,6 +44,7 @@ dependencies:
   animated_text_kit: ^4.2.2
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.12.0
   flutter_native_splash: ^2.2.19
 
   flutter_test:
@@ -64,6 +65,10 @@ dev_dependencies:
 flutter_native_splash:
   image: assets/chatgpt.png
   color: "#00A67E"
+
+flutter_icons:
+  android: "launcher_icon"
+  image_path: "assets/icons/chatgpt_icon.png"
 
 flutter:
 
