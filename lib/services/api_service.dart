@@ -114,9 +114,6 @@ class ApiClass{
 
   //Dall-E API for image generation
   Future<String> imageGenerationApi(String prompt,ScrollController controller)async{
-
-    addMessages("assistant", "....", true, controller);
-
     try{
       final response = await http.post(Uri.parse("https://api.openai.com/v1/images/generations"),
           headers: {
@@ -132,7 +129,7 @@ class ApiClass{
       if(response.statusCode == 200){
         final String content = jsonDecode(response.body)["data"][0]["url"];
         content.trim();
-        updateMessages("assistant", content, true, controller);
+        addMessages("assistant", content, true, controller);
       }
       return "Something went wrong";
     }
