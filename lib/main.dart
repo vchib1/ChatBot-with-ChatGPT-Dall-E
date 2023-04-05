@@ -1,35 +1,47 @@
+import 'package:chatgptv1/constants/themes.dart';
 import 'package:chatgptv1/pages/home_page.dart';
+import 'package:chatgptv1/providers/speech_provider.dart';
+import 'package:chatgptv1/providers/theme_provider.dart';
+import 'package:chatgptv1/services/api_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(const MyApp());
+
+void main()async{
+  WidgetsFlutterBinding.ensureInitialized();
+
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  bool? isDark = pref.getBool("isDark") ?? false;
+
+  runApp(MyApp(isDark: isDark,));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isDark;
+  const MyApp({super.key,required this.isDark});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ChatGPT',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: const ColorScheme(
-            brightness: Brightness.light,
-            primary: Color(0xff00A67E),
-            onPrimary: Colors.white,
-            secondary: Colors.white,
-            onSecondary: Colors.black,
-            error: Colors.red,
-            onError: Colors.red,
-            background: Color(0xffffffff),
-            onBackground: Color(0xffffffff),
-            surface: Color(0xff00A67E),
-            onSurface: Color(0xffffffff), //text color
-        ),
-        useMaterial3: true,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ApiClass(),),
+        ChangeNotifierProvider(create: (context) => ThemeProvider(isDark),),
+        ChangeNotifierProvider(create: (context) => SpeechProvider(),),
+      ],
+      child: ChangeNotifierProvider<ThemeProvider>(
+        create: (context) => ThemeProvider(isDark),
+        builder: (context, provider) {
+          return MaterialApp(
+            title: 'ChatGPT',
+            debugShowCheckedModeBanner: false,
+            theme: lightTheme,
+            darkTheme: darkTheme,
+            themeMode: context.watch<ThemeProvider>().currentTheme,
+            home: const HomePage(),
+          );
+        }
       ),
-      home: const HomePage(),
     );
   }
 }

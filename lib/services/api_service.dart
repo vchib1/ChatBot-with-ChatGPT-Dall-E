@@ -1,40 +1,43 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:chatgptv1/constants/constants.dart';
-import 'package:chatgptv1/models/chat_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:http/http.dart' as http;
+import '../models/message_model.dart';
 
-class ApiClass{
-
-  //stream for stream builder (this is not the best way. but this is what i came up with)
-  StreamController<List<Message>>? streamController = StreamController<List<Message>>();
+class ApiClass with ChangeNotifier{
 
   //to store user prompt and response from the API
   List<Message> messages = [];
 
   //auto scrolls the message list in listview to the bottom, when a response message is received from API and also when new prompt is requested
   scrollToBottom(ScrollController controller) {
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      controller.animateTo(
-        controller.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 10),
-        curve: Curves.easeOut,);
-    });
+    if(controller.hasClients){
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        controller.animateTo(
+          controller.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 10),
+          curve: Curves.easeOut,);
+      });
+    }
+  }
+
+  //clear messages
+  void clearMessages(BuildContext context){
+    messages = [];
+    notifyListeners();
   }
 
   //adding messages to list
   addMessages(String role,String content,bool isImage,ScrollController controller){
     messages.add(Message(role: role, content: content,isImage: isImage));
-    streamController!.add(messages);
     scrollToBottom(controller);
   }
 
   //adding messages to list
   updateMessages(String role,String content,bool isImage,ScrollController controller){
     messages.last = Message(role: role, content: content,isImage: isImage);
-    streamController!.add(messages);
     scrollToBottom(controller);
   }
 
@@ -43,6 +46,7 @@ class ApiClass{
 
     //adds user prompt to messages
     addMessages("user", prompt, false, controller);
+    notifyListeners();
 
     //apikey is in constants file, you can get your own key from OpenAI's website
     //and this code is inspired from Rivaan Ranawat, I was stuck with this for so long
@@ -78,6 +82,8 @@ class ApiClass{
     }
     catch(e){
       return e.toString();
+    }finally{
+      notifyListeners();
     }
   }
 
@@ -85,6 +91,8 @@ class ApiClass{
   Future<String> chatGptApi(String prompt,ScrollController controller)async{
 
     addMessages("assistant", "....", false, controller);
+
+    notifyListeners();
 
     try{
       final response = await http.post(Uri.parse("https://api.openai.com/v1/chat/completions"),
@@ -109,6 +117,8 @@ class ApiClass{
     }
     catch(e){
       return e.toString();
+    }finally{
+      notifyListeners();
     }
   }
 
@@ -135,6 +145,8 @@ class ApiClass{
     }
     catch(e){
       return e.toString();
+    }finally{
+      notifyListeners();
     }
   }
 

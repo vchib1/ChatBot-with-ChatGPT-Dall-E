@@ -9,11 +9,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:chatgptv1/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    bool? isDark = pref.getBool("isDark") ?? false;
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(MyApp(isDark: isDark,));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

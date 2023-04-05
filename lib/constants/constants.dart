@@ -14,4 +14,7 @@ const BorderRadius receiverBorder = BorderRadius.only(
   bottomRight: Radius.circular(10),
 );
 
+const String darkLogo = "assets/chatgpt_dark.png";
+const String lightLogo = "assets/chatgpt_light.png";
+
 const String apiKey = "";
