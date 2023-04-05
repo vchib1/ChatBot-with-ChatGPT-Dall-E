@@ -3,7 +3,7 @@
 An app made in flutter, to interact with ChatGPT model and Dall-E image generation model.
 
 ### To do
-1. Themes (dark and light).
+1. Themes (dark and light) ✔
 2. Speech to Text ✔
 3. Internet connectivty checker
 
