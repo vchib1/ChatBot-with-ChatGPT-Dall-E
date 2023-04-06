@@ -1,6 +1,6 @@
 # Open AI ChatGPT and Dall-E
 
-An app made in flutter, to interact with ChatGPT model and Dall-E image generation model.
+ChatBot app made in flutter with clean architecture, to interact with ChatGPT model and Dall-E image generation model. 
 
 ### To do
 1. Themes (dark and light) ✔
