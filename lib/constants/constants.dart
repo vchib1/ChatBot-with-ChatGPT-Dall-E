@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import '../utils/exports.dart';
 
 const BorderRadius senderBorder = BorderRadius.only(
   topLeft: Radius.circular(10),

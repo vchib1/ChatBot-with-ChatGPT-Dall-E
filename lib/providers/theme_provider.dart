@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../utils/exports.dart';
+
 class ThemeProvider with ChangeNotifier{
 
   ThemeMode _currentTheme = ThemeMode.light;
@@ -16,9 +16,7 @@ class ThemeProvider with ChangeNotifier{
   }
 
   void toggleTheme()async{
-
     SharedPreferences pref = await SharedPreferences.getInstance();
-
     if(_currentTheme == ThemeMode.light) {
       _currentTheme = ThemeMode.dark;
       pref.setBool("isDark", true);

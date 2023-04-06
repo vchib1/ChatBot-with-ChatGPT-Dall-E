@@ -1,16 +1,9 @@
-import 'package:chatgptv1/constants/themes.dart';
-import 'package:chatgptv1/pages/home_page.dart';
-import 'package:chatgptv1/providers/speech_provider.dart';
-import 'package:chatgptv1/providers/theme_provider.dart';
-import 'package:chatgptv1/services/api_service.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
+import '../utils/exports.dart';
 
 void main()async{
   WidgetsFlutterBinding.ensureInitialized();
 
+  //instance of shared preference
   SharedPreferences pref = await SharedPreferences.getInstance();
   bool? isDark = pref.getBool("isDark") ?? false;
 
@@ -25,9 +18,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => ApiClass(),),
         ChangeNotifierProvider(create: (context) => ThemeProvider(isDark),),
         ChangeNotifierProvider(create: (context) => SpeechProvider(),),
+        ChangeNotifierProvider(create: (context) => MessageProvider(),),
       ],
       child: ChangeNotifierProvider<ThemeProvider>(
         create: (context) => ThemeProvider(isDark),

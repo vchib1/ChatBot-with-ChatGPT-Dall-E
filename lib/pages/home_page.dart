@@ -1,3 +1,5 @@
+import 'package:avatar_glow/avatar_glow.dart';
+
 import '../utils/exports.dart';
 
 class HomePage extends StatefulWidget {
@@ -10,16 +12,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  //controller for text field
-  final TextEditingController _textEditingController = TextEditingController();
-
-  //controller for list view builder
-  final ScrollController _scrollController = ScrollController();
-
-  @override
-  void initState(){
-    super.initState();
-  }
+  final TextEditingController _textEditingController = TextEditingController(); //for TextField
+  final ScrollController _scrollController = ScrollController(); //for ListView.builder
 
   @override
   void dispose() {
@@ -32,68 +26,30 @@ class _HomePageState extends State<HomePage> {
   void sendPrompt(){
     if(_textEditingController.text.isNotEmpty){
       //calling mainApi with prompt text and scroll controller
-      context.read<ApiClass>().mainApi(_textEditingController.text.trim(),_scrollController);
+      context.read<MessageProvider>().sendPrompt(_textEditingController.text.trim(),_scrollController,context);
       _textEditingController.clear(); //clear text field
     }
     FocusScope.of(context).unfocus(); //dismiss keyboard on submission
   }
 
   //method to access toggle recording
-  void recordSpeech(){
-    context.read<SpeechProvider>().toggleRecording(_scrollController,context);
-  }
-
-  //on long press copy the message to clipboard
-  void copyText(String message) async {
-    await Clipboard.setData(ClipboardData(text: message)).then((value){
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            duration: Duration(seconds: 1),
-            content: Text("Copied to clipboard"),
-          ));
-    });
-  }
+  void recordSpeech() => context.read<SpeechProvider>().toggleRecording(_scrollController,context);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        //svg image for OpenAI logo
-        title: SvgPicture.asset('assets/open_ai.svg',color: Colors.white,height: 25,),
-        actions: [
-          PopupMenuButton(
-            onSelected: (value) {
-              if(value == 1){
-                context.read<ApiClass>().clearMessages(context);
-              }
-              if(value == 2){
-                context.read<ThemeProvider>().toggleTheme();
-              }
-            },
-            icon: const Icon(Icons.more_vert,color: Colors.white,),
-            itemBuilder: (context) => const [
-              PopupMenuItem(
-                value: 1,
-                child: Text("Clear Chat",style: TextStyle(color: Colors.white)),
-              ),
-              PopupMenuItem(
-                value: 2,
-                child: Text("Theme",style: TextStyle(color: Colors.white)),
-              ),
-            ]
-          )
-        ],
-      ),
+      appBar: appBar(context), //this appBar is in widgets folder
       body: Column(
         children: [
           //Chat Container
           Expanded(
-              child: Consumer<ApiClass>(
+              child: Consumer<MessageProvider>(
                 builder: (context, provider, child) {
+                  //messages is empty then it shows only the Logo
                   if(provider.messages.isEmpty){
                     return Container(
                       alignment: Alignment.center,
-                      child: Theme.of(context).primaryColor == primaryColor  ? Image.asset(lightLogo,scale: 1,width: 200) : Image.asset(darkLogo,scale: 1,width: 200),
+                      child: Theme.of(context).primaryColor == primaryColor  ? Image.asset(lightLogo,scale: 25,width: 200) : Image.asset(darkLogo,scale: 25,width: 200),
                     );
                   }else{
                     return ListView.builder(
@@ -127,7 +83,7 @@ class _HomePageState extends State<HomePage> {
                             child: SlideInLeft(
                               duration: const Duration(milliseconds: 300),
                               child: GestureDetector(
-                                onLongPress:  () => copyText(data.content), //copy message to clip board on long press
+                                onLongPress:  () => copyText(data.content,context), //copy message to clip board on long press
                                 child: Container(
                                   height: data.isImage ? 250 : null, //if data.isImage then it the height and width is fixed to 250
                                   width: data.isImage ? 250 : null, //if not then the both are null, so it resizes according to its child
@@ -156,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                                   )
                                       :
                                   data.content == "...." ? //if the data.content is "...." then it shows animated text until the actual message is updated
-                                  //animated wavy animation
+                                  //wavy animation
                                   AnimatedTextKit(
                                     totalRepeatCount: 5,
                                     animatedTexts: [
