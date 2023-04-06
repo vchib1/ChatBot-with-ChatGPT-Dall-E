@@ -7,7 +7,7 @@ ChatBot app made in flutter with clean architecture, to interact with ChatGPT mo
 2. Speech to Text ✔
 3. Provider for State management ✔
 4. Cached Network Image ✔
-5. Custom Splash Screen ✔
+5. Native Splash Screen ✔
 6. Option to download image.
 
 ## Screenshots
