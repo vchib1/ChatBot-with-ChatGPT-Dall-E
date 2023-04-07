@@ -7,8 +7,9 @@ class ApiClass{
   //this is the main API which decides the prompt is a picture or not
   Future<String> mainApi(String prompt,ScrollController controller)async{
 
-    //apikey is in constants file, you can get your own key from OpenAI's website
-    //and this code is inspired from Rivaan Ranawat, I was stuck with this for so long
+    //------------apikey is in constants file, you can get your own key from OpenAI's website----------
+    //I was making simple chat bot with ChatGPT but thanks to Rivaan Ranawat
+    //for this method to generate text and image
     try{
       final response = await http.post(Uri.parse("https://api.openai.com/v1/chat/completions"),
           headers: {
